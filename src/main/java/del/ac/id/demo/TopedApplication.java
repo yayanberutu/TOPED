@@ -1,4 +1,4 @@
-package del.ac.id.demo.jpa;
+package del.ac.id.demo;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
