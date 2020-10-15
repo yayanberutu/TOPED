@@ -28,6 +28,7 @@
 				<th>Weight</th>
 				<th>Condition</th>
 				<th>Category</th>
+				<th>Action</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -41,8 +42,24 @@
 				<td th:text="${item.itemDetail.weight}"></td>
 				<td th:text="${item.itemDetail.condition}"></td>
 				<td th:text="${item.itemDetail.insurance}"></td>
+				<td> <a class="btn btn-primary" th:href="@{'/update/' + ${item.id}}" role="Button" onclick="openForm()">Buy</a></td>
 			</tr>
 		</tbody>		
 	</table>
+	
+	<!--  <div class="formPopUp" id="popUp" style="display:none;">
+		<h1>HALO</h1>
+		 <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
+	</div> 
+	-->
+	
+<script>
+//	function openForm(){
+	//	document.getElementById("popUp").style.display="block";
+//	}
+	//function closeForm(){
+		//document.getElementById("popUp").style.display="none";
+	//}
+</script>
 </body>
 </html>
