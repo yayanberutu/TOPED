@@ -1,0 +1,5 @@
+MongoDB shell version v3.6.3
+connecting to: mongodb://192.168.43.201:27017-/
+2020-10-15T16:37:08.911+0700 E QUERY    [thread1] Error: Bad digit "-" while parsing 27017- :
+connect@src/mongo/shell/mongo.js:251:13
+@(connect):1:6
