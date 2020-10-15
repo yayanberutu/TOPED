@@ -3,6 +3,8 @@ package del.ac.id.demo.controller;
 import java.util.List;
 import java.util.Optional;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -25,7 +27,11 @@ public class ItemController {
 	@Autowired MongoTemplate mongoTemplate;
 	
 	@RequestMapping("/item")
-	public ModelAndView item() {
+	public ModelAndView item(HttpServletRequest request) {
+		if(request.getSession().getAttribute("user") == null) {
+			return new ModelAndView("redirect:/login");
+		}
+		
 		List<Item> items = itemRepository.findAll();
 		ModelAndView mv = new ModelAndView("item");
 		mv.addObject("items", items);
