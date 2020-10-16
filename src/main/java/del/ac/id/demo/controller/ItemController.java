@@ -11,8 +11,10 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
@@ -35,6 +37,21 @@ public class ItemController {
 		List<Item> items = itemRepository.findAll();
 		ModelAndView mv = new ModelAndView("item");
 		mv.addObject("items", items);
+		return mv;
+	}
+	
+	@RequestMapping(value="/addItem", method=RequestMethod.POST)
+	public ModelAndView addItem(@ModelAttribute Item item, HttpServletRequest request) {
+		
+		itemRepository.insert(item);
+		ModelAndView mv = new ModelAndView("redirect:/item");
+		return mv;
+	}
+	
+	@RequestMapping(value="/updateItem", method=RequestMethod.POST)
+	public ModelAndView updateItem(@ModelAttribute Item item, HttpServletRequest request) {
+		mongoTemplate.save(item, "items");
+		ModelAndView mv = new ModelAndView("redirect:/item");
 		return mv;
 	}
 	
