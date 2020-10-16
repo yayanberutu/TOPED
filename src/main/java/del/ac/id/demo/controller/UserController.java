@@ -56,9 +56,9 @@ public class UserController {
 			return new ModelAndView("redirect:/login");
 		}else {
 			HttpSession session = request.getSession();
-			session.setAttribute("user", user);
+			session.setAttribute("user", loginUser);
 		}
-		
+
 		
 		ModelAndView mv = new ModelAndView("redirect:/item");
 		return mv;
