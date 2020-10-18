@@ -16,17 +16,19 @@
 	<!------ Include the above in your HEAD tag ---------->
 	<link rel="stylesheet"
 	href="https://use.fontawesome.com/releases/v5.0.8/css/all.css">
-
+	<script type="text/javascript" th:src="@{/main.js}"></script>
 </head>
 <body>
 	<h1>Welcome to Toped Commerce!</h1>
 	<a th:href="@{/logout}">LOGOUT</a>
-	<p th:text="${session.user.role}"></p>
-	<button type="button" class="btn btn-primary" th:if="${session.user.role == 0}" data-toggle="modal" data-target="#exampleModal" data-whatever="@getbootstrap">Tambah Item</button>
+	<p th:text="${session.user.username}"></p>
+	<p th:if="${session.user.role} == 0">Admin</p>
+	<p th:if="${session.user.role} == 1">Pembeli</p>
+	<h3><a th:href="@{/store}">LIHAT STORE</a></h3>
+	<button type="button" class="btn btn-primary" th:if="${session.user.role == 0}" data-toggle="modal" data-target="#addModal">Tambah Item</button>
 	<table class="table table-striped table-responsive-md">
 		<thead>
 			<tr>
-				<th>No</th>
 				<th>Name</th>
 				<th>Stock</th>
 				<th>Price</th>
@@ -41,8 +43,7 @@
 		</thead>
 		<tbody>
 	
-			<tr th:each="item : ${items}" th:with="counter=0">
-				<td th:text="${counter}"></td>
+			<tr th:each="item : ${items}">
 				<td th:text="${item.item_name}"></td>
 				<td th:text="${item.stock}"></td>
 				<td th:text="${item.price}"></td>
@@ -53,71 +54,200 @@
 				<td th:text="${item.itemDetail.condition}"></td>
 				<td th:text="${item.itemDetail.insurance}"></td>
 				<td> 
-					<button type="button" class="btn btn-warning" th:if="${session.user.role == 0}" data-toggle="modal" data-target="#exampleModal" th:attrappend="data-target=${item.item_name}" data-whatever="@mdo">Edit</button>
-					<a class="btn btn-danger" th:if="${session.user.role == 0}" th:href="@{'/item/delete/' + ${item.id}}" role="Button" onclick="openForm()">Delete</a>
-					<a class="btn btn-primary" th:if="${session.user.role == 1}" th:href="@{'/update/' + ${item.id}}" role="Button">Buy</a>
-
-					
+					<a  class="btn btn-warning" th:if="${session.user.role == 0}" th:href="@{'/item/getbyId/'+ ${item.id}}" id=editButton"" data-toggle="modal" data-target="#editModal">Edit</a>
+					<a class="btn btn-danger" th:if="${session.user.role == 0}" th:href="@{'/item/delete/'+ ${item.id}}" id="deleteButton" data-toggle="modal" role="Button" data-target="#deleteModal">Delete</a>
+					<a class="btn btn-primary" th:if="${session.user.role == 1}" th:href="@{'/item/getbyId/' + ${item.id}}" th:id="buyButton"  data-toggle="modal" data-target="#buyModal">Buy</a>
 				</td>
-				<div th:with="${counter++}"></div>
 			</tr>
 		</tbody>		
 	</table>
 	
-	<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<form th:action="@{/item/addNew}" th:method="post" th:object="${newItem}">
 	  <div class="modal-dialog">
 	    <div class="modal-content">
 	      <div class="modal-header">
-	        <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+	        <h5 class="modal-title" id="exampleModalLabel">New Item</h5>
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">	
+	          <span aria-hidden="true">&times;</span>
+	        </button>
+	      </div>
+	      <div class="modal-body">
+
+	          <div class="form-group">
+	            <label for="name" class="col-form-label">Item Name:</label>
+	            <input type="text" class="form-control" id="name" th:name="name" th:field="*{item_name}">
+
+	          </div>
+	           <div class="form-group">
+	            <label for="recipient-name" class="col-form-label">Stock:</label>
+	            <input type="text" class="form-control" id="stock" th:name="stock" th:field="*{stock}">
+	          </div>
+	          
+	           <div class="form-group">
+	            <label for="recipient-name" class="col-form-label">Price:</label>
+	            <input type="text" class="form-control" id="price" th:name="price" th:field="*{price}">
+	          </div>
+	          
+
+	            <input type="hidden" class="form-control" th:value=0 th:name="sold" id="sold" th:field="*{sold}">
+	        
+	        
+
+	            <input type="hidden" class="form-control" th:value=0 th:name="seen" id="seen" th:field="*{seen}">
+
+	          
+	           <div class="form-group">
+	            <label for="recipient-name" class="col-form-label">Weight:</label>
+	            <input type="text" class="form-control" id="weight" th:name="weight" th:field="*{itemDetail.weight}">
+	          </div>
+	          
+	           <div class="form-group">
+	            <label for="recipient-name" class="col-form-label">Condition:</label>
+	            <input type="text" class="form-control" id="condition" th:name="condition" th:field="*{itemDetail.condition}">
+	          </div>
+
+	           <div class="form-group">
+	            <label for="recipient-name" class="col-form-label">Insurance:</label>
+	            <input type="text" class="form-control" id="insurance" th:name="insurance" th:field="*{itemDetail.insurance}">
+	          </div>
+	          
+	          <div class="form-group">
+	            <label for="recipient-name" class="col-form-label">Category:</label>
+	            <input type="text" class="form-control" id="category" th:name="category" th:field="*{itemDetail.category}">
+	          </div>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+	        <button type="Submit" class="btn btn-primary">Simpan</button>
+	      </div>
+	    </div>
+	  </div>
+	  </form>
+	</div>
+	
+	
+	<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<form th:action="@{/updateItem}" th:method="post" th:object="${newItem}">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h5 class="modal-title" id="exampleModalLabel">Edit Item</h5>
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">	
+	          <span aria-hidden="true">&times;</span>
+	        </button>
+	      </div>
+	      <div class="modal-body">
+	      	<input type="hidden" th:field="*{id}" id="idEdit" disabled>
+	          <div class="form-group">
+	            <label for="name" class="col-form-label">Item Name:</label>
+	            <input type="text" class="form-control" id="item_nameEdit" th:name="name" th:field="*{item_name}">
+
+	          </div>
+	           <div class="form-group">
+	            <label for="recipient-name" class="col-form-label">Stock:</label>
+	            <input type="text" class="form-control" id="stockEdit" th:name="stock" th:field="*{stock}">
+	          </div>
+	          
+	           <div class="form-group">
+	            <label for="recipient-name" class="col-form-label">Price:</label>
+	            <input type="text" class="form-control" id="priceEdit" th:name="price" th:field="*{price}">
+	          </div>
+	          
+	           <div class="form-group">
+	            <label for="recipient-name" class="col-form-label">Sold:</label>
+	            <input type="text" class="form-control" th:value=0 th:name="sold" id="soldedit" th:field="*{sold}" disabled>
+				</div>
+	          
+	          <div class="form-group">
+	            <label for="recipient-name" class="col-form-label">Seen:</label>  
+	            <input type="text" class="form-control" th:value=0 th:name="seen" id="seenEdit" th:field="*{seen}" disabled>
+			   </div>
+	          
+	           <div class="form-group">
+	            <label for="recipient-name" class="col-form-label">Weight:</label>
+	            <input type="text" class="form-control" id="weightEdit" th:name="weight" th:field="*{itemDetail.weight}">
+	          </div>
+	          
+	           <div class="form-group">
+	            <label for="recipient-name" class="col-form-label">Condition:</label>
+	            <input type="text" class="form-control" id="conditionEdit" th:name="condition" th:field="*{itemDetail.condition}">
+	          </div>
+
+	           <div class="form-group">
+	            <label for="recipient-name" class="col-form-label">Insurance:</label>
+	            <input type="text" class="form-control" id="insuranceEdit" th:name="insurance" th:field="*{itemDetail.insurance}">
+	          </div>
+	          
+	          <div class="form-group">
+	            <label for="recipient-name" class="col-form-label">Category:</label>
+	            <input type="text" class="form-control" id="categoryEdit" th:name="category" th:field="*{itemDetail.category}">
+	          </div>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+	        <button type="Submit" class="btn btn-primary">Simpan</button>
+	      </div>
+	    </div>
+	  </div>
+	  </form>
+	</div>
+	
+	
+	<div class="modal fade" id="buyModal" tabindex="-1" aria-labelledby="buyModalLabel" aria-hidden="true">
+	<form>
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h5 class="modal-title" id="exampleModalLabel">Buy</h5>
 	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 	          <span aria-hidden="true">&times;</span>
 	        </button>
 	      </div>
 	      <div class="modal-body">
-	        <form>
-	        <div class="form-group">
-	            <label for="stock" class="col-form-label">Name:</label>
-	            <input type="text" class="form-control" th:value="${items.get(0).item_name}" id="stock">
+	      <input type="hidden" id="idBuy" >
+	          <div class="form-group">
+	            <label for="seen" class="col-form-label">Total Item</label>
+	            <input type="text" id="totalBuy" class="form-control">
 	          </div>
 	          <div class="form-group">
-	            <label for="stock" class="col-form-label">Stock:</label>
-	            <input type="text" class="form-control" id="stock">
+	            <label for="rating" class="col-form-label">Rating:</label>
+	            <input type="text" class="form-control" id="ratingBuy">
 	          </div>
-	          <div class="form-group">
-	            <label for="price" class="col-form-label">Price:</label>
-	            <input type="text" class="form-control" id="price">
-	          </div>
-	          <div class="form-group">
-	            <label for="weight" class="col-form-label">Weight:</label>
-	            <input type="text" class="form-control" id="weight">
-	          </div>
-	          <div class="form-group">
-	            <label for="condition" class="col-form-label">Condition</label>
-	            <input type="text" class="form-control" id="condition">
-	          </div>
-	          <div class="form-group">
-	            <label for="category" class="col-form-label">Category:</label>
-	            <input type="text" class="form-control" id="category">
-	          </div>
-	        </form>
+	    
 	      </div>
 	      <div class="modal-footer">
 	        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-	        <button type="button" class="btn btn-primary">Update</button>
+	        <button type="submit" class="btn btn-primary">Buy</button>
 	      </div>
 	    </div>
 	  </div>
+      </form>
 	</div>
+	
+	<!--Delete  Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      Apakah anda yakin ingin menghapus?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <a href="" id="delRef" class="btn btn-primary">Ya. Hapus</a>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
-$('#exampleModal').on('show.bs.modal', function (event) {
-	  var button = $(event.relatedTarget) // Button that triggered the modal
-	  var recipient = button.data('whatever') // Extract info from data-* attributes
-	  // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
-	  // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
-	  var modal = $(this)
-	  modal.find('.modal-title').text('New message to ' + recipient)
-	  modal.find('.modal-body input').val(recipient)
-	})
+
 </script>
 </body>
 </html>

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -20,12 +21,11 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import del.ac.id.demo.model.User;
 import del.ac.id.demo.repository.*;
-
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @RestController
 public class UserController {
 	@Autowired UserRepository userRepository;
 	@Autowired MongoTemplate mongoTemplate;
-	
 	@GetMapping("/registration")
 	public ModelAndView Registration() {
 		ModelAndView mv = new ModelAndView("registration");

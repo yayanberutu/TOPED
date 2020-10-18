@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8"/>
+	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" integrity="sha384-w1Q4orYjBQndcko6MimVbzY0tgp4pWB4lZ7lr30WKz0vr/aWKhXdBNmNb5D92v7s" crossorigin="anonymous"></script>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+	<link
+	href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+	rel="stylesheet" id="bootstrap-css">
+	<script
+	src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+	<script
+	src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<!------ Include the above in your HEAD tag ---------->
+	<link rel="stylesheet"
+	href="https://use.fontawesome.com/releases/v5.0.8/css/all.css">
+	<title>Store</title>
+</head>
+<body>
+<a th:href="@{'/item'}">Kembali ke Item</a>
+	<table class="table">
+	  <thead class="thead-dark">
+	    <tr>
+	      <th scope="col">ID</th>
+	      <th scope="col">Store Name</th>
+	      <th scope="col">Location</th>
+	      <th scope="col">Points</th>
+	      <th scope="col">Reputation</th>
+	      <th scope="col">Latest Online</th>
+	      <th scope="col">Action</th>
+	    </tr>
+	  </thead>
+	  <tbody>
+	    <tr th:each="store : ${listStore}">
+	      <th scope="row" th:text="${store.id}"></th>
+		  <td th:text="${store.store_name}"></td>
+	      <td th:text="${store.location}"></td>
+		  <td th:text="${store.points}"></td>
+		  <td th:text="${store.reputation}"></td>
+		  <td th:text="${store.latest_online}"></td>
+		  <td><a th:href="@{'/getItemByStoreName/' + ${store.store_name}}">Lihat Detail</a></td>
+	    </tr>
+	  </tbody>
+	</table>
+
+
+</body>
+</html>
